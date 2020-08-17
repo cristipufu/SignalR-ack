@@ -4,7 +4,13 @@ using System.Threading.Tasks;
 
 namespace SignalR.Ack.Server
 {
-    public class DemoHub : Hub
+
+    public interface IDemoClient
+    {
+        Task ReceiveMessage(string message);
+    }
+
+    public class DemoHub : Hub<IDemoClient>
     {
         public override async Task OnConnectedAsync()
         {
@@ -22,7 +28,7 @@ namespace SignalR.Ack.Server
 
         public Task SendMessage(string message)
         {
-            return Clients.All.SendAsync("ReceiveMessage", $"Echo {message}");
+            return Clients.All.ReceiveMessage($"Echo {message}");
         }
     }
 }
